@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Add or Edit Event</title>
+    <style type="text/css">
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            background-color: #007BFF;
+            color: white;
+            padding: 20px 0;
+            margin-bottom: 20px;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-size: 1rem;
+            color: #444;
+        }
+
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        input[type="submit"], .btn-back {
+            background-color: #007BFF;
+            color: #fff;
+            border: none;
+            padding: 10px 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+            font-size: 1rem;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+        }
+
+        input[type="submit"]:hover, .btn-back:hover {
+            background-color: #0056b3;
+        }
+
+        .form-container {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            width: 100%;
+        }
+    </style>
+
+</head>
+<body>
+<header>
+    <h1>Add or Edit Event</h1>
+</header>
+<main>
+    <div class="form-container">
+        <form th:action="@{/events/add}" th:method="post">
+            <!-- Hidden input for event ID -->
+            <input type="hidden" name="id" th:value="${event != null ? event.getId() : ''}">
+
+            <!-- Name field -->
+            <label for="name">Event Name:</label>
+            <input type="text" id="name" name="name" th:value="${event != null ? event.getName() : ''}" required placeholder="Enter event name">
+
+            <!-- Description field -->
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" th:value="${event != null ? event.getDescription() : ''}" required placeholder="Enter event description">
+
+            <!-- Popularity Score -->
+            <label for="popularityScore">Popularity Score:</label>
+            <input type="number" id="popularityScore" name="popularityScore" min="0" step="0.1"
+                   th:value="${event != null ? event.getPopularityScore() : ''}" required
+                   placeholder="Enter popularity score"/>
+
+            <!-- Location dropdown -->
+            <label for="location">Location:</label>
+            <select id="location" name="locationId" required>
+                <option value="" disabled selected>Please choose a location</option>
+                <option th:each="loc : ${locations}"
+                        th:value="${loc.getId()}"
+                        th:text="${loc.getName()}"
+                        th:selected="${event != null && event.getLocation() != null && loc.getId() == event.getLocation().getId()}">
+                </option>
+            </select>
+
+            <!-- Submit button -->
+            <input type="submit" value="Save">
+            <!-- Back button -->
+            <a href="/events" class="btn-back">Back</a>
+        </form>
+    </div>
+</main>
+</body>
+</html>
